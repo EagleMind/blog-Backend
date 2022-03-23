@@ -14,15 +14,16 @@ exports.getPost = async (req, res) => {
 exports.getAllUserPosts = async (req, res) => {
   const id = req.params.id;
   try {
-    Post.find({ _id: id }).then(function (posts) {
-      res.status(200).json(posts);
-    });
+    console.log({ userId: id });
+    const posts = await Post.find({ userId: id });
+    res.status(200).send(posts);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 exports.createPost = async (req, res) => {
   const post = {
+    userId: req.userData.userId,
     title: req.body.title,
     body: req.body.body,
   };
@@ -30,8 +31,8 @@ exports.createPost = async (req, res) => {
   const postHistory = await Post.findOne({ title: post.title });
   if (!postHistory) {
     try {
-      Post.create(post, function (err, Post) {
-        res.status(200).json(Post);
+      Post.create(post, function (err, post) {
+        res.status(200).json(post);
       });
     } catch (err) {
       res.status(404).json({ message: err.message });

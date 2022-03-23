@@ -37,7 +37,7 @@ exports.login = (req, res) => {
         if (isMatched) {
           const payload = { id: user.id, email: user.email };
           jwt.sign(
-            JSON.stringify(payload),
+            payload,
             process.env.secretkey,
             { expiresIn: 3600 },
             (err, token) => {
