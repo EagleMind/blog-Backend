@@ -3,23 +3,18 @@ const User = require("../models/users");
 // Primary CRUD for posts
 
 exports.getPost = async (req, res) => {
-  const id = req.params.id;
-  try {
-    const post = await Post.findOne({ _id: id });
-    res.status(200).json(post);
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
+  const post = await Post.findOne({ _id: id })(req.body, (err) =>
+    !err
+      ? res.status(200).json(post)
+      : res.status(404).json({ message: err.message })
+  );
 };
 exports.getAllUserPosts = async (req, res) => {
-  const id = req.params.id;
-  try {
-    console.log({ userId: id });
-    const posts = await Post.find({ userId: id });
-    res.status(200).send(posts);
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
+  const posts = await Post.find({ userId: req.params.id })(req.body, (err) =>
+    !err
+      ? res.status(200).json(posts)
+      : res.status(404).json({ message: err.message })
+  );
 };
 exports.createPost = async (req, res) => {
   const post = {
@@ -28,60 +23,47 @@ exports.createPost = async (req, res) => {
     body: req.body.body,
   };
   // Check for duplicate post title //
-  const postHistory = await Post.findOne({ title: post.title });
-  if (!postHistory) {
-    try {
-      Post.create(post, function (err, post) {
-        res.status(200).json(post);
-      });
-    } catch (err) {
-      res.status(404).json({ message: err.message });
-    }
-  } else {
-    res.send("this title is a duplicate, please rethink of one");
+  const postHistory = await Post.findOne({ title: post.title }).exec();
+  if (postHistory) {
+    res
+      .status(404)
+      .json({ message: "this title is a duplicate, please rethink of one" });
+    return;
   }
+  Post.create(post, (err, post) =>
+    !err
+      ? res.status(200).json(post)
+      : res.status(404).json({ message: err.message })
+  );
 };
 
 exports.updatePost = async (req, res) => {
-  const id = req.params.id;
-  try {
-    Post.updateOne({ _id: id }, req.body, function (err, result) {
-      res.status(200).json(result);
-    });
-  } catch (err) {
-    res.status(404).json({ message: err.message });
-  }
+  Post.updateOne({ _id: req.params.id });
 };
 exports.deletePost = async (req, res) => {
-  const id = req.params.id;
-  try {
-    Post.deleteOne({ _id: id }, function (err, result) {
-      res.status(200).json(result);
-    });
-  } catch (err) {
-    res.status(404).json({ message: err.message });
-  }
+  Post.deleteOne({ _id: req.params.id })(req.body, (err) =>
+    !err
+      ? res.status(200).json(result)
+      : res.status(404).json({ message: err.message })
+  );
 };
 
 // posts Mass CRUD operations
 
 exports.getAllPosts = async (req, res) => {
-  try {
-    Post.find({}).then(function (posts) {
-      res.send(posts);
-    });
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
+  Post.find({})(req.body, (err) =>
+    !err
+      ? res.status(200).json(result)
+      : res.status(404).json({ message: err.message })
+  );
 };
 exports.deleteManyposts = async (req, res) => {
   const arrOfIds = req.body;
-  try {
-    const Post = await Post.deleteMany(arrOfIds[0]);
-    res.status(200).json(Post);
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
+  const Post = await Post.deleteMany(arrOfIds[0])(req.body, (err) =>
+    !err
+      ? res.status(200).json(result)
+      : res.status(404).json({ message: err.message })
+  );
 };
 
 // Categories CRUD
