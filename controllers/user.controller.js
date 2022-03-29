@@ -31,7 +31,7 @@ exports.login = (req, res) => {
   User.findOne({ email }).then((user) => {
     console.log(user);
     if (!user) {
-      return res.json({ msg: "email not exist" });
+      return res.status(404).json({ msg: "email not exist" });
     } else {
       bcrypt.compare(password, user.password).then((isMatched) => {
         if (isMatched) {
@@ -46,7 +46,7 @@ exports.login = (req, res) => {
             }
           );
         } else {
-          return res.json({ msg: "password incorrect" });
+          return res.status(401).json({ msg: "password incorrect" });
         }
       });
     }
