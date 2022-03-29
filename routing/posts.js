@@ -12,8 +12,7 @@ router.delete("/deletePost/:id", auth, Post.deletePost);
 
 // MultiFunctionality CRUD operations
 
-router.get("/getAllPosts", auth, Post.getAllPosts);
-router.get("/getAllUserPosts/:id", auth, Post.getAllUserPosts);
+router.get("/getAllPosts", auth, Post.getPosts);
 router.post("/deleteManyposts", auth, Post.deleteManyposts);
 
 module.exports = router;

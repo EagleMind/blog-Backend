@@ -1,21 +1,17 @@
 const Post = require("../models/Post");
-const User = require("../models/users");
 // Primary CRUD for posts
 
 exports.getPost = async (req, res) => {
-  const post = await Post.findOne({ _id: id })(req.body, (err) =>
-    !err
-      ? res.status(200).json(post)
-      : res.status(404).json({ message: err.message })
-  );
+  await Post.findOne({ _id: req.params.id })
+    .then((posts) => res.status(200).json(posts))
+    .catch((err) => res.status(404).json({ message: err.message }));
 };
-exports.getAllUserPosts = async (req, res) => {
-  const posts = await Post.find({ userId: req.params.id })(req.body, (err) =>
-    !err
-      ? res.status(200).json(posts)
-      : res.status(404).json({ message: err.message })
-  );
+exports.getPosts = async (req, res) => {
+  await Post.find({ userId: req?.params?.id })
+    .then((posts) => res.status(200).json(posts))
+    .catch((err) => res.status(404).json({ message: err.message }));
 };
+
 exports.createPost = async (req, res) => {
   const post = {
     userId: req.userData.userId,
@@ -38,32 +34,21 @@ exports.createPost = async (req, res) => {
 };
 
 exports.updatePost = async (req, res) => {
-  Post.updateOne({ _id: req.params.id });
+  Post.updateOne({ _id: req.params.id })
+    .then((posts) => res.status(200).json(posts))
+    .catch((err) => res.status(404).json({ message: err.message }));
 };
 exports.deletePost = async (req, res) => {
-  Post.deleteOne({ _id: req.params.id })(req.body, (err) =>
-    !err
-      ? res.status(200).json(result)
-      : res.status(404).json({ message: err.message })
-  );
+  Post.deleteOne({ _id: req.params.id })
+    .then((posts) => res.status(200).json(posts))
+    .catch((err) => res.status(404).json({ message: err.message }));
 };
 
-// posts Mass CRUD operations
-
-exports.getAllPosts = async (req, res) => {
-  Post.find({})(req.body, (err) =>
-    !err
-      ? res.status(200).json(result)
-      : res.status(404).json({ message: err.message })
-  );
-};
 exports.deleteManyposts = async (req, res) => {
   const arrOfIds = req.body;
-  const Post = await Post.deleteMany(arrOfIds[0])(req.body, (err) =>
-    !err
-      ? res.status(200).json(result)
-      : res.status(404).json({ message: err.message })
-  );
+  const Post = await Post.deleteMany(arrOfIds[0])
+    .then((posts) => res.status(200).json(posts))
+    .catch((err) => res.status(404).json({ message: err.message }));
 };
 
 // Categories CRUD
