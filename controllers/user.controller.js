@@ -42,7 +42,7 @@ exports.login = (req, res) => {
             { expiresIn: 3600 },
             (err, token) => {
               if (err) throw err;
-              res.json({ token: "Bearer " + token, id: user._id });
+              res.json({ token: token, id: user._id });
             }
           );
         } else {
