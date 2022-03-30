@@ -26,11 +26,9 @@ exports.createPost = async (req, res) => {
       .json({ message: "this title is a duplicate, please rethink of one" });
     return;
   }
-  Post.create(post, (err, post) =>
-    !err
-      ? res.status(200).json(post)
-      : res.status(404).json({ message: err.message })
-  );
+  Post.create(post, (err, post))
+    .then((posts) => res.status(200).json(posts))
+    .catch((err) => res.status(404).json({ message: err.message }));
 };
 
 exports.updatePost = async (req, res) => {
