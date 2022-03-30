@@ -9,7 +9,7 @@ const Profile = new schema({
   social_media: [
     { name: "Linkedin", link: String },
     { name: "Behance", link: String },
-    { name: "artstation", link: String },
+    { name: "Artstation", link: String },
   ],
   posts: [{ postId: String }],
   following: [{ profileId: String }],
