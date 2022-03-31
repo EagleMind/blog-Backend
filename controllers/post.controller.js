@@ -26,15 +26,18 @@ exports.createPost = async (req, res) => {
       .json({ message: "this title is a duplicate, please rethink of one" });
     return;
   }
-  Post.create(post, (err, post))
+  Post.create(post)
     .then((posts) => res.status(200).json(posts))
     .catch((err) => res.status(404).json({ message: err.message }));
 };
 
 exports.updatePost = async (req, res) => {
-  Post.updateOne({ _id: req.params.id })
-    .then((posts) => res.status(200).json(posts))
-    .catch((err) => res.status(404).json({ message: err.message }));
+  Post.updateOne({ _id: req.params.id }).exec(function (err, result) {
+    res.status(200).send(result);
+    if (err) {
+      return err;
+    }
+  });
 };
 exports.deletePost = async (req, res) => {
   Post.deleteOne({ _id: req.params.id })
