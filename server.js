@@ -2,12 +2,12 @@ const express = require("express");
 const path = require("path");
 const connect = require("./config/db");
 const app = express();
-const bodyParser = require("body-parser");
 const cors = require("cors");
 const userController = require("./controllers/user.controller");
+const profileController = require("./controllers/profile.controller");
 const compression = require("compression");
 const posts = require("./routing/posts");
-var jwt = require("jsonwebtoken");
+const auth = require("./middleware/verifyAuth");
 connect();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -17,11 +17,6 @@ app.use(express.json());
 app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Access-Control-Allow-Origin,Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers,Authorization"
-  );
   next();
 });
 
@@ -33,9 +28,13 @@ app.listen(4000, function () {
   console.log("listening on 4000");
 });
 // Controllers routings
-app.use("/posts", posts);
 app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "/", "index.html"));
 });
+
 app.post("/register", userController.registration);
 app.post("/login", userController.login);
+app.get("/me", auth, profileController.me);
+app.put("/me/update", auth, profileController.update);
+app.post("/me/create", auth, profileController.create);
+app.use("/posts", posts);

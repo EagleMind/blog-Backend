@@ -1,18 +1,15 @@
 const mongoose = require("mongoose");
 const schema = mongoose.Schema;
-
+const social_medias = new schema({ linkedin: { type: String } });
 const Profile = new schema({
+  email: { type: String },
   name: { type: String },
   profile_pic: { type: String },
   bio: { type: String },
   job_title: { type: String },
-  social_media: [
-    { name: "Linkedin", link: String },
-    { name: "Behance", link: String },
-    { name: "Artstation", link: String },
-  ],
-  posts: [{ postId: String }],
-  following: [{ profileId: String }],
+  user_posts: [{ type: String }],
+  followingIds: [{ type: String }],
+  social_networks: [social_medias],
 });
 
 module.exports = ProfileModel = mongoose.model("profile", Profile);

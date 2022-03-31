@@ -1,10 +1,9 @@
-const User = require("../controllers/user.controller");
 const Profile = require("../controllers/profile.controller");
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/verifyAuth");
 
-router.post("/register", User.registration);
-router.post("/login", User.login);
-
+router.put("/me/update", auth, Profile.update);
+router.get("/me", auth, Profile.me);
+router.post("/me/create", auth, Profile.create);
 module.exports = router;
