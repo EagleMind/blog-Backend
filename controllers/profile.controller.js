@@ -36,7 +36,7 @@ exports.create = async (req, res) => {
     .catch((err) => res.status(404).json({ message: err.message }));
 };
 exports.me = async (req, res) => {
-  Profile.find({})
+  Profile.find({ email: req.userData.email })
     .then((posts) => res.status(200).json(posts))
     .catch((err) => res.status(404).json({ message: err.message }));
 };
