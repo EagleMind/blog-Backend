@@ -12,12 +12,14 @@ exports.update = async (req, res) => {
     followingIds: req.body.followingIds,
   };
 
-  await Profile.updateOne({}, profile).exec(function (err, result) {
-    res.send(profile);
-    if (err) {
-      return err;
+  await Profile.updateOne({ email: req.userData.email }, profile).exec(
+    function (err, result) {
+      res.send(profile);
+      if (err) {
+        return err;
+      }
     }
-  });
+  );
 };
 
 exports.create = async (req, res) => {
