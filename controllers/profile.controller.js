@@ -38,7 +38,7 @@ exports.update = async (req, res) => {
 //     .catch((err) => res.status(404).json({ message: err.message }));
 // };
 exports.me = async (req, res) => {
-  Profile.find({ email: req.userData.email })
-    .then((posts) => res.status(200).json(posts))
+  Profile.findOne({ email: req.userData.email })
+    .then((profile) => res.status(200).json(profile))
     .catch((err) => res.status(404).json({ message: err.message }));
 };
