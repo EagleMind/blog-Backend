@@ -8,6 +8,8 @@ const profileController = require("./controllers/profile.controller");
 const compression = require("compression");
 const posts = require("./routing/posts");
 const auth = require("./middleware/verifyAuth");
+const profile = require("./routing/profile");
+const fileUpload = require("express-fileupload");
 connect();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -19,7 +21,7 @@ app.use(function (req, res, next) {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   next();
 });
-
+app.use(fileUpload());
 //call heros routing
 // Using compression in the middleware will help decrease requests body response size therefore makes the app faster
 app.use(compression());
@@ -36,5 +38,7 @@ app.post("/register", userController.registration);
 app.post("/login", userController.login);
 app.get("/me", auth, profileController.me);
 app.put("/me/update", auth, profileController.update);
+app.use("/me/upload", auth, profileController.upload);
 // app.post("/me/create", auth, profileController.create);
 app.use("/posts", posts);
+app.use("/me", profile);

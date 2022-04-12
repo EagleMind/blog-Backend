@@ -5,5 +5,6 @@ const auth = require("../middleware/verifyAuth");
 
 router.put("/me/update", auth, Profile.update);
 router.get("/me", auth, Profile.me);
+router.post("/upload", auth, Profile.upload);
 // router.post("/me/create", auth, Profile.create);
 module.exports = router;
