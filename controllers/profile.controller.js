@@ -14,7 +14,7 @@ exports.update = async (req, res) => {
 
   await Profile.updateOne({ email: req.userData.email }, profile).exec(
     function (err, result) {
-      res.send(profile);
+      res.status(200).send({ success: true });
       if (err) {
         return err;
       }
@@ -38,7 +38,7 @@ exports.update = async (req, res) => {
 //     .catch((err) => res.status(404).json({ message: err.message }));
 // };
 exports.me = async (req, res) => {
-  Profile.findOne({ email: req.userData.email })
+  Profile.findOne({ email: req.userData.email }, "-_id")
     .then((profile) => res.status(200).json(profile))
     .catch((err) => res.status(404).json({ message: err.message }));
 };
