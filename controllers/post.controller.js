@@ -13,22 +13,27 @@ exports.getPosts = async (req, res) => {
 };
 
 exports.createPost = async (req, res) => {
+  // Estimate Adult Reading Time
+  const wpm = 225;
+  const nWords = req.body.body.trim().split(/\s+/).length;
+  const time = Math.ceil(nWords / wpm);
   const post = {
     userId: req.userData.userId,
     title: req.body.title,
     body: req.body.body,
+    eReadingTime: time,
   };
   // Check for duplicate post title //
   const postHistory = await Post.findOne({ title: post.title }).exec();
   if (postHistory) {
-    res.status(403).json({ err: "Title already exists" });
-    return;
+    return res.status(403).json({ err: "Title already exists" });
+  } else {
+    Post.create(post)
+      .then((posts) => {
+        res.status(200).send({ posts });
+      })
+      .catch((err) => res.status(404).json({ message: err.message }));
   }
-  Post.create(post)
-    .then((posts) => {
-      res.status(200).send({ success: true });
-    })
-    .catch((err) => res.status(404).json({ message: err.message }));
 };
 
 exports.updatePost = async (req, res) => {
