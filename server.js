@@ -37,7 +37,7 @@ app.get("/", function (req, res) {
 app.post("/register", userController.registration);
 app.post("/login", userController.login);
 app.get("/me", auth, profileController.me);
-app.put("/me/update", auth, profileController.update);
+app.patch("/me/update", auth, profileController.update);
 app.use("/me/upload", auth, profileController.upload);
 // app.post("/me/create", auth, profileController.create);
 app.use("/posts", posts);

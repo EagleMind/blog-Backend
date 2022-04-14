@@ -1,6 +1,5 @@
 const Profile = require("../models/profile");
-const crypto = require("crypto");
-const fs = require("fs");
+const User = require("../models/users");
 const path = require("path");
 const checksum = require("checksum");
 
@@ -15,15 +14,19 @@ exports.update = async (req, res) => {
     user_posts: req.body.user_posts,
     followingIds: req.body.followingIds,
   };
-
-  await Profile.updateOne({ email: req.userData.email }, profile).exec(
-    function (err, result) {
-      res.status(200).send({ success: true });
+  if (req.body.email) {
+    res.status(400).send({ error: "Email cannot be modified for now" });
+  } else {
+    await User.updateOne({ _id: req.userData.userId }, profile).exec(function (
+      err,
+      result
+    ) {
+      res.status(200).send(result);
       if (err) {
         return err;
       }
-    }
-  );
+    });
+  }
 };
 
 // exports.create = async (req, res) => {
