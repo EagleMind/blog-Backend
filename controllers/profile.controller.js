@@ -5,6 +5,7 @@ const checksum = require("checksum");
 
 exports.update = async (req, res) => {
   const profile = {
+    userId: req.userData.userId,
     email: req.body.email,
     name: req.body.name,
     profile_pic: req.body.profile_pic,
@@ -17,15 +18,14 @@ exports.update = async (req, res) => {
   if (req.body.email) {
     res.status(400).send({ error: "Email cannot be modified for now" });
   } else {
-    await User.updateOne({ _id: req.userData.userId }, profile).exec(function (
-      err,
-      result
-    ) {
-      res.status(200).send(result);
-      if (err) {
-        return err;
+    await Profile.updateOne({ email: req.userData.email }, profile).exec(
+      function (err, result) {
+        res.status(200).send(profile);
+        if (err) {
+          return err;
+        }
       }
-    });
+    );
   }
 };
 
