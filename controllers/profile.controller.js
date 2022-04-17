@@ -46,7 +46,8 @@ exports.update = async (req, res) => {
 // };
 
 exports.me = async (req, res) => {
-  Profile.findOne({ email: req.userData.email }, "-_id")
+  console.log({ userId: req.userData.userId });
+  Profile.findOne({ email: req.userData.email })
     .then((profile) => res.status(200).json(profile))
     .catch((err) => res.status(404).json({ message: err.message }));
 };
