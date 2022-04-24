@@ -15,7 +15,7 @@ exports.update = async (req, res) => {
     user_posts: req.body.user_posts,
     followingIds: req.body.followingIds,
   };
-  if (req.body.email) {
+  if (req.body.email !== req.userData.email) {
     res.status(400).send({ error: "Email cannot be modified for now" });
   } else {
     await Profile.updateOne({ email: req.userData.email }, profile).exec(
