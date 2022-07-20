@@ -16,11 +16,7 @@ app.use(express.json());
 app.use(cors());
 // Connect to database
 app.use(express.json());
-app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  next();
-});
+
 app.use(fileUpload());
 //call heros routing
 // Using compression in the middleware will help decrease requests body response size therefore makes the app faster
