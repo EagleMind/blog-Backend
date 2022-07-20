@@ -4,26 +4,28 @@ const profile = require("../models/profile");
 const User = require("../models/users");
 require("dotenv").config();
 
-exports.registration = (req, res) => {
-  const { email, password, name, job_title } = req.body;
-
-  User.findOne({ email }).then((user) => {
+exports.registration = async (req, res) => {
+  const { email, password } = req.body;
+  await User.findOne({ email: email }).then((user) => {
     if (user) {
-      return res.json({ msg: "user already exist" });
+      return res.status(201).json({ error: "user already exist" });
     } else {
-      const createUser = new User({ email, password });
-      const profilesAttributes = new profile({ email, name, job_title });
       bcrypt.genSalt(10, (err, salt) => {
-        bcrypt.hash(createUser.password, salt, (err, hash) => {
-          createUser.password = hash;
-          createUser.save().then((user) =>
-            profilesAttributes
-              .save()
-              .then((profile) => res.send([user, profile]))
-              .catch((err) => {
-                res.send(err);
-              })
-          );
+        bcrypt.hash(password, salt, (err, hash) => {
+          const createUser = new User({
+            email: email,
+            password: hash,
+          });
+          createUser
+            .save()
+            .then(() => {
+              return res.send({
+                success: "Welcome to rentWall, Please Sign in!",
+              });
+            })
+            .catch((err) => {
+              res.send(err);
+            });
         });
       });
     }
